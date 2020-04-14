@@ -1,26 +1,32 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { connect } from 'react-redux';
+import * as actions from './Actions.js';
+import CounterList from './List/CounterList.js';
+import { saveStorage } from './storage.js';
+import './style.less';
 
-function App() {
+
+function App(props) {
+  const { allIncrease, addCounter, counterList } = props
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="btn-wrapper">
+        <button className="btn" onClick={allIncrease}>+</button>
+        <button className="btn" onClick={addCounter}>新增</button>
+      </div>
+      <div className="btn-wrapper">
+        <button className="btn" onClick={() => saveStorage(counterList)}>保存到localStorage</button>
+      </div>
+      <CounterList />
     </div>
   );
 }
 
-export default App;
+const mapStateToProps = (state) => ({ 'counterList': state.App.counterList })
+const mapDispatchToProps = (dispatch) => ({
+  'addCounter': () => dispatch(actions.addCounter()),
+  'allIncrease': () => dispatch(actions.allIncrease())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
